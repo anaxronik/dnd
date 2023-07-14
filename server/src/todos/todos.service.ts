@@ -12,7 +12,7 @@ export class TodosService {
   }
 
   findAll() {
-    this.loggerService.success("find allll");
+    this.loggerService.success({ m: "find allll", count: 1 });
     return `This action returns all todos`;
   }
 

@@ -4,21 +4,31 @@ import * as path from "path";
 import { Injectable } from "@nestjs/common";
 
 export type TLogType = "error" | "success";
+export type TLogMessage = string | number | boolean | object;
 
 @Injectable()
 export class LoggerService {
-  async error(message: string) {
+  async error(message: TLogMessage) {
     const log = this.createLog("error", message);
     await this.saveToDisk(log);
   }
 
-  async success(message: string) {
+  async success(message: TLogMessage) {
     const log = this.createLog("success", message);
     await this.saveToDisk(log);
   }
 
-  private createLog(type: TLogType, message: string) {
-    return { time: Date.now(), type, message };
+  serialize = (message: string | number | boolean | object) => {
+    return JSON.stringify(message);
+  };
+
+  private createLog(type: TLogType, message: TLogMessage) {
+    return {
+      timestamp: Date.now(),
+      time: new Date().toLocaleTimeString(),
+      type,
+      message,
+    };
   }
 
   private async saveToDisk(log: object) {
